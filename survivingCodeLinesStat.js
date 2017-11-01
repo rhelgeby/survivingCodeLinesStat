@@ -61,9 +61,12 @@ function getLinesOfCodeFromRevision(revision, fileFilter) {
 	// restore stdio
 	process.stdio = 'inherit';
 	var fileNames = execSync(`git ls-files ${fileFilter} | xargs`).toString();
-	var files = fileNames.replace('\n', '').split(' ');
+	var files = fileNames.replace(/\n/g, ' ').split(' ');
 
 	files.forEach(file => {
+		if (file === '') {
+			return;
+		}
 		fileCounter++;
 		getLinesOfCodeFromFile(file, lineMap);
 	});
